@@ -12,10 +12,12 @@ import { Label } from "../ui/label"
 import { Input } from "../ui/input"
 import { Combobox, ComboboxContent, ComboboxEmpty, ComboboxInput, ComboboxItem, ComboboxList } from "../ui/combobox"
 import api from "@/lib/api"
-import { useForm } from "react-hook-form"
+import { useForm, Controller } from "react-hook-form"
 import { useAuth } from "@/context/AuthContext"
 import { useNavigate } from "react-router"
-import { toast, Toaster } from "sonner"
+import { toast } from "sonner"
+import { useEffect, useState } from "react"
+import type IAssociation from "@/interfaces/IAssociation"
 
 
 
@@ -23,8 +25,10 @@ const LoginView = () => {
 
   const { login } = useAuth();
   const navigate = useNavigate()
+  const [isLoading, setIsLoading] = useState(false)
+  const [assocations, setAssociations] = useState<IAssociation[]>([]);
 
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const { register, handleSubmit, control, formState: { errors } } = useForm({
     defaultValues: {
       username: "",
       password: "",
@@ -32,8 +36,25 @@ const LoginView = () => {
     }
   })
 
+  const getAssociations = async () => {
+    try {
+      setIsLoading(true)
+      const res = await api.get("/associations");
+      if (res.status == 200)
+        setAssociations(res.data)
+    } catch (error) {
+      toast.error("Nem sikerült lekérni az egyesületeket!", {
+        description: error instanceof Error ? error.message : "Ismeretlen hiba történt."
+      })
+    }
+    finally {
+      setIsLoading(false)
+    }
+  }
+
   const onSubmit = async (data: any) => {
     try {
+      setIsLoading(true)
       const res = await api.post("/account/login", data)
       if (res.status === 200) {
         login(res.data)
@@ -51,10 +72,15 @@ const LoginView = () => {
         })
       }
     }
+    finally {
+      setIsLoading(false)
+    }
 
   }
 
-
+  useEffect(() => {
+    getAssociations();
+  }, [])
 
   return (
     <Card className="mx-auto w-full max-w-sm align-items-center">
@@ -89,22 +115,47 @@ const LoginView = () => {
               {errors.password && <span className="text-sm text-red-500">{errors.password.message}</span>}
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="Username">Felhasználónév</Label>
-              <Combobox>
-                <ComboboxInput placeholder="Válassza ki egyesületét" />
-                <ComboboxContent>
-                  <ComboboxEmpty>Nincs találat</ComboboxEmpty>
-                  <ComboboxList>
+              <Label htmlFor="Username">Egyesület</Label>
+              <Controller
+                name="association"
+                control={control}
+                rules={{ required: "Válasszon egy egyesületet!" }}
+                render={({ field }) => (
+                  <Combobox
+                    items={assocations}
+                    value={field.value}
+                    onValueChange={(val) => field.onChange(val)}
+                    itemToStringLabel={(id) => assocations.find(a => a.id.toString() === id)?.name || ""}
+                  >
+                    <ComboboxInput
+                      placeholder="Válassza ki egyesületét"
+                    />
 
-                  </ComboboxList>
-                </ComboboxContent>
-              </Combobox>
+                    <ComboboxContent>
+                      <ComboboxEmpty>Nincs találat</ComboboxEmpty>
+                      <ComboboxList>
+                        {assocations.map((a) => (
+                          <ComboboxItem
+                            key={a.id}
+                            value={a.id.toString()}
+                          >
+                            {a.name}
+                          </ComboboxItem>
+                        ))}
+                      </ComboboxList>
+                    </ComboboxContent>
+                  </Combobox>
+                )}
+              />
+              {errors.association && (
+                <span className="text-sm text-red-500">{errors.association.message}</span>
+              )}
             </div>
           </div>
         </form>
       </CardContent>
       <CardFooter className="flex-col gap-2">
-        <Button type="submit" form="loginForm" className="w-full">Bejelentkezés</Button>
+        <Button disabled={isLoading} type="submit" form="loginForm" className="w-full">Bejelentkezés</Button>
       </CardFooter>
     </Card>
   )
