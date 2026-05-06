@@ -10,14 +10,13 @@ import {
 import { Button } from "../ui/button"
 import { Label } from "../ui/label"
 import { Input } from "../ui/input"
-import { Combobox, ComboboxContent, ComboboxEmpty, ComboboxInput, ComboboxItem, ComboboxList } from "../ui/combobox"
 import api from "@/lib/api"
 import { useForm, Controller } from "react-hook-form"
 import { useAuth } from "@/context/AuthContext"
-import { useNavigate } from "react-router"
+import { NavLink, useNavigate } from "react-router"
 import { toast } from "sonner"
-import { useEffect, useState } from "react"
-import type IAssociation from "@/interfaces/IAssociation"
+import { useState } from "react"
+import AssociationsComboBox from "../ui/associations"
 
 
 
@@ -26,7 +25,6 @@ const LoginView = () => {
   const { login } = useAuth();
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
-  const [assocations, setAssociations] = useState<IAssociation[]>([]);
 
   const { register, handleSubmit, control, formState: { errors } } = useForm({
     defaultValues: {
@@ -35,22 +33,6 @@ const LoginView = () => {
       associationId: ""
     }
   })
-
-  const getAssociations = async () => {
-    try {
-      setIsLoading(true)
-      const res = await api.get("/associations");
-      if (res.status == 200)
-        setAssociations(res.data)
-    } catch (error: any) {
-      toast.error("Nem sikerült lekérni az egyesületeket!", {
-        description: error.message
-      })
-    }
-    finally {
-      setIsLoading(false)
-    }
-  }
 
   const onSubmit = async (data: any) => {
     try {
@@ -78,10 +60,6 @@ const LoginView = () => {
 
   }
 
-  useEffect(() => {
-    getAssociations();
-  }, [])
-
   return (
     <Card className="mx-auto w-full max-w-sm align-items-center">
       <CardHeader>
@@ -90,7 +68,7 @@ const LoginView = () => {
           Jelentkezzen be felhasználónevével és jelszavával.
         </CardDescription>
         <CardAction>
-          <Button variant='link'>Regisztráció</Button>
+          <NavLink to="/auth/register" className='text-primary underline-offset-4 hover:underline'>Regisztráció</NavLink>
         </CardAction>
       </CardHeader>
       <CardContent>
@@ -121,30 +99,7 @@ const LoginView = () => {
                 control={control}
                 rules={{ required: "Válasszon egy egyesületet!" }}
                 render={({ field }) => (
-                  <Combobox
-                    items={assocations}
-                    value={field.value}
-                    onValueChange={(val) => field.onChange(val)}
-                    itemToStringLabel={(id) => assocations.find(a => a.id.toString() === id)?.name || ""}
-                  >
-                    <ComboboxInput
-                      placeholder="Válassza ki egyesületét"
-                    />
-
-                    <ComboboxContent>
-                      <ComboboxEmpty>Nincs találat</ComboboxEmpty>
-                      <ComboboxList>
-                        {assocations.map((a) => (
-                          <ComboboxItem
-                            key={a.id}
-                            value={a.id.toString()}
-                          >
-                            {a.name}
-                          </ComboboxItem>
-                        ))}
-                      </ComboboxList>
-                    </ComboboxContent>
-                  </Combobox>
+                  <AssociationsComboBox field={field} />
                 )}
               />
               {errors.associationId && (
