@@ -32,7 +32,7 @@ const LoginView = () => {
     defaultValues: {
       username: "",
       password: "",
-      association: ""
+      associationId: ""
     }
   })
 
@@ -42,9 +42,9 @@ const LoginView = () => {
       const res = await api.get("/associations");
       if (res.status == 200)
         setAssociations(res.data)
-    } catch (error) {
+    } catch (error: any) {
       toast.error("Nem sikerült lekérni az egyesületeket!", {
-        description: error instanceof Error ? error.message : "Ismeretlen hiba történt."
+        description: error.message
       })
     }
     finally {
@@ -117,7 +117,7 @@ const LoginView = () => {
             <div className="grid gap-2">
               <Label htmlFor="Username">Egyesület</Label>
               <Controller
-                name="association"
+                name="associationId"
                 control={control}
                 rules={{ required: "Válasszon egy egyesületet!" }}
                 render={({ field }) => (
@@ -147,8 +147,8 @@ const LoginView = () => {
                   </Combobox>
                 )}
               />
-              {errors.association && (
-                <span className="text-sm text-red-500">{errors.association.message}</span>
+              {errors.associationId && (
+                <span className="text-sm text-red-500">{errors.associationId.message}</span>
               )}
             </div>
           </div>
