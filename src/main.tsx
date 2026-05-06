@@ -10,6 +10,7 @@ import LoginView from "./components/views/LoginView.tsx"
 import AccountLayout from "./components/layout/AccountLayout.tsx"
 import { AuthProvider } from "./context/AuthContext.tsx"
 import { Toaster } from "./components/ui/sonner.tsx"
+import RegisterView from "./components/views/RegisterView.tsx"
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
       {
         path: "login",
         element: <LoginView />,
+      },
+      {
+        path: "register",
+        element: <RegisterView />
       }
     ]
   }

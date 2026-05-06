@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Combobox, ComboboxContent, ComboboxEmpty, ComboboxInput, ComboboxItem, ComboboxList } from "../ui/combobox"
 import type IAssociation from '@/interfaces/IAssociation';
-import type { ControllerRenderProps } from 'react-hook-form';
 import { toast } from 'sonner';
 import api from '@/lib/api';
 
