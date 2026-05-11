@@ -4,8 +4,12 @@ import AssociationsComboBox from "../ui/associations"
 import { Controller, useForm } from "react-hook-form"
 import { Button } from "../ui/button"
 import { useState } from "react"
+import { setTitle } from "@/lib/general"
 
 const RegisterView = () => {
+    setTitle("Plander | Regisztráció")
+
+
     const PLANDER_ADMIN_URL = "http://localhost:4200"
     const totalsteps = 2;
     const [currentStep, setCurrentStep] = useState(1)

@@ -17,10 +17,13 @@ import { NavLink, useNavigate } from "react-router"
 import { toast } from "sonner"
 import { useState } from "react"
 import AssociationsComboBox from "../ui/associations"
+import { setTitle } from "@/lib/general"
 
 
 
 const LoginView = () => {
+  setTitle("Plander | Bejelentkezés")
+
 
   const { login } = useAuth();
   const navigate = useNavigate()

@@ -1,7 +1,9 @@
-import {  useNavigate } from 'react-router'
+import { useNavigate } from 'react-router'
 import { Button } from '../ui/button'
+import { setTitle } from '@/lib/general';
 
 const HomeView = () => {
+  setTitle("Plander | Kezdőlap")
 
   const navigate = useNavigate();
 
