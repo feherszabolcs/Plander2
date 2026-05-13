@@ -5,18 +5,26 @@ import { Controller, useForm } from "react-hook-form"
 import { Button } from "../ui/button"
 import { useState } from "react"
 import { setTitle } from "@/lib/general"
+import { Input } from "../ui/input"
+import { Label } from "../ui/label"
 
 const RegisterView = () => {
     setTitle("Plander | Regisztráció")
 
 
     const PLANDER_ADMIN_URL = "http://localhost:4200"
-    const totalsteps = 2;
+    const totalsteps = 3;
     const [currentStep, setCurrentStep] = useState(1)
 
     const { register, handleSubmit, control, formState: { errors, isValid } } = useForm({
         defaultValues: {
-            associationId: ""
+            associationId: "",
+            username: "",
+            email: "",
+            password: "",
+            name: "",
+            address: "",
+            guardNumber: ""
         }
     })
 
@@ -41,6 +49,56 @@ const RegisterView = () => {
                         <p className="my-4 mx-auto">Nem találja egyesületét? Indítsa el a regisztrációs folyamatot
                             <a href={PLANDER_ADMIN_URL} target="_blank" className='text-primary underline-offset-4 hover:underline'> ezen az oldalon.</a></p>
                     </>
+                }
+                {currentStep == 2 &&
+                    <form id="registerForm">
+                        <div className="flex flex-col gap-6">
+                            <div className="grid gap-2">
+                                <Label htmlFor="Name">Teljes név</Label>
+                                <Input id="Name" type="text" {...register("name", { required: "Kötelező" })} />
+                                {errors.name && <span className="text-sm text-red-500">{errors.name.message}</span>}
+                            </div>
+                            <div className="grid gap-2">
+                                <Label htmlFor="Email">E-mail cím</Label>
+                                <Input id="Email" type="email" {...register("email", { required: "Kötelező" })} />
+                                {errors.email && <span className="text-sm text-red-500">{errors.email.message}</span>}
+                            </div>
+                            <div className="grid gap-2">
+                                <Label htmlFor="Address">Lakcím</Label>
+                                <Input id="Address" type="text" {...register("address", { required: "Kötelező" })} />
+                                {errors.address && <span className="text-sm text-red-500">{errors.address.message}</span>}
+                            </div>
+                            <div className="grid gap-2">
+                                <Label htmlFor="GuardNumber">Igazolványszám</Label>
+                                <Input id="GuardNumber" type="text" {...register("guardNumber", { required: "Kötelező" })} />
+                                {errors.guardNumber && <span className="text-sm text-red-500">{errors.guardNumber.message}</span>}
+                            </div>
+                        </div>
+                    </form>
+                }
+                {
+                    currentStep == 3 &&
+                    <form id="registerForm">
+                        <div className="flex flex-col gap-6">
+                            <div className="grid gap-2">
+                                <Label htmlFor="Username">Felhasználónév</Label>
+                                <Input id="Username" type="text" {...register("username", { required: "Kötelező" })} />
+                                {errors.username && <span className="text-sm text-red-500">{errors.username.message}</span>}
+                            </div>
+                            <div className="grid gap-2">
+                                <Label htmlFor="Password">Jelszó</Label>
+                                <Input id="Password" type="password" {...register("password", { required: "Kötelező" })} />
+                                {errors.password && <span className="text-sm text-red-500">{errors.password.message}</span>}
+                            </div>
+                            {/* todo */}
+                            <div className="grid gap-2">
+                                <Label htmlFor="Password">Jelszó mégegyszer</Label>
+                                <Input id="Password" type="password" {...register("password", { required: "Kötelező" })} />
+                                {errors.password && <span className="text-sm text-red-500">{errors.password.message}</span>}
+                            </div>
+
+                        </div>
+                    </form>
                 }
 
             </CardContent>
