@@ -35,6 +35,7 @@ const RegisterView = () => {
     const handleRegister = async (data: any) => {
         try {
             const { passswordRepeat, ...apiData } = data
+            console.log(apiData)
             const res = await api.post("/account/register", apiData)
             if (res.status == 200) {
                 toast.success("A regisztrációs kérelem sikeresen elküldve.", {
@@ -43,9 +44,9 @@ const RegisterView = () => {
                 navigate("/auth/login")
             }
         } catch (error: any) {
-            console.log(error.response.data)
+            console.log(error?.response.data)
             toast.error("Sikertelen regisztráció.", {
-                description: error.response.data[0].description
+                description: error?.response.data[0]?.description
             })
         }
 
