@@ -8,33 +8,44 @@ import MainLayout from "./components/layout/MainLayout.tsx"
 import HomeView from "./components/views/HomeView.tsx"
 import LoginView from "./components/views/LoginView.tsx"
 import AccountLayout from "./components/layout/AccountLayout.tsx"
-import { AuthProvider } from "./context/AuthContext.tsx"
 import { Toaster } from "./components/ui/sonner.tsx"
 import RegisterView from "./components/views/RegisterView.tsx"
+import UsersView from "./components/views/Users/UsersView.tsx"
+import ProvidersLayout from "./components/layout/ProvidersLayout.tsx"
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <MainLayout />,
-    loader: protectedLoader,
+    element: <ProvidersLayout />,
     children: [
       {
-        index: true,
-        element: <HomeView />,
-      }
-    ]
-  },
-  {
-    path: "/auth",
-    element: <AccountLayout />,
-    children: [
-      {
-        path: "login",
-        element: <LoginView />,
+        path: "/",
+        element: <MainLayout />,
+        loader: protectedLoader,
+        children: [
+          {
+            index: true,
+            element: <HomeView />,
+          },
+          {
+            path: "users/",
+            element: <UsersView />
+          }
+        ]
       },
       {
-        path: "register",
-        element: <RegisterView />
+        path: "/auth",
+        element: <AccountLayout />,
+        children: [
+          {
+            path: "login",
+            element: <LoginView />,
+          },
+          {
+            path: "register",
+            element: <RegisterView />
+          }
+        ]
       }
     ]
   }
@@ -51,11 +62,9 @@ function protectedLoader() {
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ThemeProvider>
-      <AuthProvider>
-        <RouterProvider router={router} />
-        <Toaster position="bottom-right" closeButton={true} />
+      <RouterProvider router={router} />
+      <Toaster position="bottom-right" closeButton={true} />
 
-      </AuthProvider>
     </ThemeProvider>
   </StrictMode>
 )
