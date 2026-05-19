@@ -2,13 +2,14 @@ import { createContext, use, useEffect, useState } from "react"
 
 interface AuthContextType {
     token: string | null
+    user: UserData
     isLoading: boolean
     login: (userdata: UserData) => void
     logout: () => void
 }
 
 interface UserData {
-    username: string,
+    userName: string,
     email: string,
     token: string
 }
@@ -36,7 +37,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     return (
-        <AuthContext.Provider value={{ token, isLoading, login, logout }}>
+        <AuthContext.Provider value={{ token, isLoading, login, logout, user: JSON.parse(localStorage.getItem("userData") || "null") }}>
             {children}
         </AuthContext.Provider>
     )
