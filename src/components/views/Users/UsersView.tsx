@@ -11,7 +11,7 @@ const UsersView = () => {
     const [toggleListView, setToggleListView] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
 
-    const [users, setUsers] = useState<IUser>();
+    const [users, setUsers] = useState<IUser[]>();
 
     const getUsers = async () => {
         try {
@@ -33,7 +33,7 @@ const UsersView = () => {
 
     return (
         <div className="">
-            <div className='flex justify-start gap-2 items-center'>
+            <div className='flex justify-start gap-2 items-center mb-3'>
                 <Button onClick={() => setToggleListView(true)}>lista</Button>
                 <Button onClick={() => setToggleListView(false)}>kartyak</Button>
             </div>
@@ -46,7 +46,11 @@ const UsersView = () => {
                 <UserListView />
             }
             {(!isLoading && !toggleListView) &&
-                <UserCardView />
+                <div className="flex justify-center flex-row gap-2">
+                    {users?.map((user) => (
+                        <UserCardView user={user} />
+                    ))}
+                </div>
             }
         </div>
     )

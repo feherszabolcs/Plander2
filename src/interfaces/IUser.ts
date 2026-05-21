@@ -7,4 +7,5 @@ export interface IUser {
   address: string
   isConfirmed: boolean
   token: string
+  roles: string[]
 }
