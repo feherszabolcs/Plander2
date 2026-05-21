@@ -167,12 +167,12 @@ function SidebarContent({ collapsed, onToggle, isMobile = false }: { collapsed: 
                     <>
                         <Avatar className="h-8 w-8 shrink-0">
                             <AvatarImage src="" alt="" />
-                            <AvatarFallback className="text-xs">{user.name?.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                            <AvatarFallback className="text-xs">{user?.name?.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                         </Avatar>
                         <div className="flex-1 min-w-0">
-                            <p className="text-xs font-medium truncate">{user.name}</p>
+                            <p className="text-xs font-medium truncate">{user?.name}</p>
                             <p className="text-[11px] text-muted-foreground truncate">
-                                {user.email}
+                                {user?.email}
                             </p>
                         </div>
                     </>
@@ -272,16 +272,16 @@ function Topbar({ onDarkModeToggle }: { onDarkModeToggle: () => void }) {
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="relative h-9 w-9 rounded-full">
                             <Avatar className="h-9 w-9">
-                                <AvatarImage src="" alt={user.name} />
-                                <AvatarFallback>{user.name?.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                                <AvatarImage src="" alt={user?.name} />
+                                <AvatarFallback>{user?.name?.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                             </Avatar>
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-56">
                         <DropdownMenuLabel>
                             <div className="flex flex-col space-y-1">
-                                <p className="text-sm font-medium">{user.name}</p>
-                                <p className="text-xs text-muted-foreground">{user.email}</p>
+                                <p className="text-sm font-medium">{user?.name}</p>
+                                <p className="text-xs text-muted-foreground">{user?.email}</p>
                             </div>
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />

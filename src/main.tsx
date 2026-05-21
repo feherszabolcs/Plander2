@@ -36,6 +36,7 @@ const router = createBrowserRouter([
       {
         path: "/auth",
         element: <AccountLayout />,
+        loader: redirectLoader,
         children: [
           {
             path: "login",
@@ -52,9 +53,16 @@ const router = createBrowserRouter([
 ])
 
 function protectedLoader() {
-  const token = localStorage.getItem("userData") ? JSON.parse(localStorage.getItem("userData")!).token : null
+  const token = localStorage.getItem("token")
   if (!token)
     return redirect("/auth/login")
+
+  return null
+}
+function redirectLoader() {
+  const token = localStorage.getItem("token")
+  if (token)
+    return redirect("/")
 
   return null
 }

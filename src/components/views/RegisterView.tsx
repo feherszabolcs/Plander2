@@ -116,7 +116,6 @@ const RegisterView = () => {
                                 <Input id="Password" type="password" {...register("password", { required: "Kötelező" })} />
                                 {errors.password && <span className="text-sm text-red-500">{errors.password.message}</span>}
                             </div>
-                            {/* todo */}
                             <div className="grid gap-2">
                                 <Label htmlFor="Password">Jelszó mégegyszer</Label>
                                 <Input id="PasswordRepeat" type="password" {...register("passswordRepeat", {
