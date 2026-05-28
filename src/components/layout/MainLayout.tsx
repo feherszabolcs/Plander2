@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { NavLink, Outlet, useLocation } from "react-router";
 import {
-    LayoutDashboard, Users, ShoppingCart, BarChart3,
-    Settings, Bell, FileText, HelpCircle,
+    LayoutDashboard, Users,
+    Settings, Bell, HelpCircle,
     ChevronLeft, ChevronRight, Layers, Search,
     Moon, Sun, Menu,
+    MessageSquareMore,
+    Calendar1,
+    ClipboardEdit,
 } from "lucide-react";
 
 // shadcn/ui components
@@ -36,15 +39,15 @@ import { useAuth } from "@/context/AuthContext";
 const NAV_ITEMS = [
     { label: "Kezdőlap", to: "/", icon: LayoutDashboard },
     { label: "Tagok", to: "/users", icon: Users },
-    { label: "Rendelések", to: "/orders", icon: ShoppingCart, badge: "12" },
-    { label: "Analitika", to: "/analytics", icon: BarChart3 },
-    { label: "Tartalom", to: "/content", icon: FileText },
+    { label: "Üzenetek", to: "/messages", icon: MessageSquareMore, badge: "12" },
+    { label: "Beosztások", to: "/duties", icon: Calendar1 },
+    { label: "Szolgálati napló", to: "/content", icon: ClipboardEdit },
     { label: "Értesítések", to: "/notifications", icon: Bell, badge: "3" },
 ];
 
 const BOTTOM_ITEMS = [
     { label: "Beállítások", to: "/settings", icon: Settings },
-    { label: "Súgó", to: "/help", icon: HelpCircle },
+    { label: "Támogatás", to: "/help", icon: HelpCircle },
 ];
 
 // ─── Single NavItem ───────────────────────────────────────────────────────────
@@ -267,7 +270,6 @@ function Topbar({ onDarkModeToggle }: { onDarkModeToggle: () => void }) {
                     <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-primary" />
                 </Button>
 
-                {/* User dropdown */}
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="relative h-9 w-9 rounded-full">

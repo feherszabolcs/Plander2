@@ -12,6 +12,8 @@ import { Toaster } from "./components/ui/sonner.tsx"
 import RegisterView from "./components/views/RegisterView.tsx"
 import UsersView from "./components/views/Users/UsersView.tsx"
 import ProvidersLayout from "./components/layout/ProvidersLayout.tsx"
+import MessagesView from "./components/views/Messages/MessagesView.tsx"
+import DutiesView from "./components/views/Duties/DutiesView.tsx"
 
 const router = createBrowserRouter([
   {
@@ -30,6 +32,14 @@ const router = createBrowserRouter([
           {
             path: "users/",
             element: <UsersView />
+          },
+          {
+            path: "messages",
+            element: <MessagesView />
+          },
+          {
+            path: "duties",
+            element: <DutiesView />
           }
         ]
       },
