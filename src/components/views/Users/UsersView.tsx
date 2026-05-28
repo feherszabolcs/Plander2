@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { type IUser } from '@/interfaces/IUser'
 import api from '@/lib/api'
 import { toast } from 'sonner'
+import { setTitle } from '@/lib/general'
 
 const UsersView = () => {
 
@@ -12,6 +13,8 @@ const UsersView = () => {
     const [isLoading, setIsLoading] = useState(true)
 
     const [users, setUsers] = useState<IUser[]>();
+    setTitle("Plander | Tagok")
+
 
     const getUsers = async () => {
         try {
@@ -33,7 +36,7 @@ const UsersView = () => {
 
     return (
         <div className="">
-            <div className='flex justify-start gap-2 items-center mb-3'>
+            <div className='flex justify-start w-full mb-5 gap-2.5 items-center'>
                 <Button onClick={() => setToggleListView(true)}>lista</Button>
                 <Button onClick={() => setToggleListView(false)}>kartyak</Button>
             </div>
@@ -46,9 +49,9 @@ const UsersView = () => {
                 <UserListView />
             }
             {(!isLoading && !toggleListView) &&
-                <div className="flex justify-center flex-row gap-2">
+                <div className="justify-center grid md:grid-cols-2 gap-3 xl:grid-cols-3">
                     {users?.map((user) => (
-                        <UserCardView user={user} />
+                        <UserCardView user={user} key={user.token} />
                     ))}
                 </div>
             }
