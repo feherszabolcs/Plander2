@@ -1,8 +1,128 @@
-import React from 'react'
+import type { ColumnDef } from "@tanstack/react-table"
 
-const UserListView = () => {
+
+export const columns: ColumnDef<IUser>[] = [
+    {
+        accessorKey: "name",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Név
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+    },
+    {
+        accessorKey: "guardNumber",
+        header: "Igazolvány-szám",
+    },
+    {
+        accessorKey: "roles",
+        header: "Szerepkörök",
+    },
+]
+
+import {
+    flexRender,
+    getCoreRowModel,
+    type SortingState,
+    getSortedRowModel,
+    useReactTable,
+} from "@tanstack/react-table"
+
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table"
+import type { IUser } from "@/interfaces/IUser"
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { ArrowUpDown } from "lucide-react"
+
+interface DataTableProps<TData, TValue> {
+    columns: ColumnDef<TData, TValue>[]
+    data: TData[]
+}
+
+export function DataTable<TData, TValue>({
+    columns,
+    data,
+}: DataTableProps<TData, TValue>) {
+
+    const [sorting, setSorting] = useState<SortingState>([])
+
+    const table = useReactTable({
+        data,
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+        onSortingChange: setSorting,
+        getSortedRowModel: getSortedRowModel(),
+        state: {
+            sorting,
+        },
+    })
+
     return (
-        <div>UserListView</div>
+        <div className="overflow-hidden rounded-md border">
+            <Table>
+                <TableHeader>
+                    {table.getHeaderGroups().map((headerGroup) => (
+                        <TableRow key={headerGroup.id}>
+                            {headerGroup.headers.map((header) => {
+                                return (
+                                    <TableHead key={header.id}>
+                                        {header.isPlaceholder
+                                            ? null
+                                            : flexRender(
+                                                header.column.columnDef.header,
+                                                header.getContext()
+                                            )}
+                                    </TableHead>
+                                )
+                            })}
+                        </TableRow>
+                    ))}
+                </TableHeader>
+                <TableBody>
+                    {table.getRowModel().rows?.length ? (
+                        table.getRowModel().rows.map((row) => (
+                            <TableRow
+                                key={row.id}
+                                data-state={row.getIsSelected() && "selected"}
+                            >
+                                {row.getVisibleCells().map((cell) => (
+                                    <TableCell key={cell.id}>
+                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        ))
+                    ) : (
+                        <TableRow>
+                            <TableCell colSpan={columns.length} className="h-24 text-center">
+                                Nincs találat.
+                            </TableCell>
+                        </TableRow>
+                    )}
+                </TableBody>
+            </Table>
+        </div>
+    )
+}
+
+const UserListView = ({ data }: { data: IUser[] }) => {
+    return (
+        <div>
+            <DataTable columns={columns} data={data} />
+        </div>
     )
 }
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import UserListView from './UserListView'
 import UserCardView from './UserCardView'
 import { Button } from '@/components/ui/button'
@@ -46,7 +46,7 @@ const UsersView = () => {
                 </>}
 
             {(!isLoading && toggleListView) &&
-                <UserListView />
+                <UserListView data={users!} />
             }
             {(!isLoading && !toggleListView) &&
                 <div className="justify-center grid md:grid-cols-2 gap-3 xl:grid-cols-3">
