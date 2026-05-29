@@ -24,6 +24,16 @@ export const columns: ColumnDef<IUser>[] = [
         accessorKey: "roles",
         header: "Szerepkörök",
     },
+    {
+        accessorKey: "isConfirmed",
+        header: "Státusz",
+        cell: ({ row }) => {
+            const isConfirmed = row.getValue("isConfirmed")
+            return (
+                isConfirmed ? <Badge className="bg-green-500">Megerősítve</Badge> : <Badge className="bg-amber-500">Nincs megerősítve</Badge>
+            )
+        }
+    }
 ]
 
 import {
@@ -46,6 +56,7 @@ import type { IUser } from "@/interfaces/IUser"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { ArrowUpDown } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
