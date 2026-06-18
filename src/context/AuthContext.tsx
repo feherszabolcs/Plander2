@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     useEffect(() => {
         const storedToken = localStorage.getItem("token")
         setToken(storedToken)
-        setIsLoading(false)
+        setIsLoading(true)
 
         api.get("/account/me")
             .then(res => {
@@ -31,6 +31,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             .catch(() => {
                 setToken(null)
                 localStorage.removeItem("token")
+            }).finally(() => {
+                setIsLoading(false)
             })
     }, [])
 
