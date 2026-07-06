@@ -29,10 +29,37 @@ export function useAssociationChat(token: string | null, associationId: number |
             .configureLogging(LogLevel.Information)
             .build();
 
+        const setupHandlers = () => {
+            hubConnection.on("ReceiveRoomMessageHistory", (history: any[]) => {
+                const loadedMessages = history.map((item) => ({
+                    room: item.roomName ?? item.room ?? roomName,
+                    sender: item.senderName ?? item.sender,
+                    message: item.message,
+                    sentAt: item.sentAt
+                }));
+                setMessages(loadedMessages);
+            });
+
+            hubConnection.on("ReceiveRoomMessage", (payload: any) => {
+                setMessages((prev) => [
+                    ...prev,
+                    {
+                        room: payload.room,
+                        sender: payload.sender,
+                        message: payload.message,
+                        sentAt: payload.sentAt
+                    }
+                ]);
+            });
+        };
+
+        setupHandlers();
+
         hubConnection.start()
             .then(async () => {
                 setStatus("connected");
                 await hubConnection.invoke("JoinRoom", roomName);
+                await hubConnection.invoke("GetRoomChatHistory", roomName, 50);
             })
             .catch((error) => {
                 console.error("SignalR connection error:", error);
@@ -42,46 +69,11 @@ export function useAssociationChat(token: string | null, associationId: number |
         setConnection(hubConnection);
 
         return () => {
-            hubConnection.stop();
+            hubConnection.off("ReceiveRoomMessageHistory");
+            hubConnection.off("ReceiveRoomMessage");
+            hubConnection.stop().catch(() => { });
         };
     }, [token, roomName]);
-
-    useEffect(() => {
-        if (!connection) return;
-
-        connection.on("ReceiveRoomMessage", (payload: any) => {
-            setMessages((prev) => [...prev, {
-                room: payload.room,
-                sender: payload.sender,
-                message: payload.message,
-                sentAt: payload.sentAt
-            }]);
-        });
-
-        connection.on("RoomUserJoined", (_room: string, userName: string) => {
-            setMessages((prev) => [...prev, {
-                room: _room,
-                sender: "system",
-                message: `${userName} belépett a csoportba.`,
-                sentAt: new Date().toISOString()
-            }]);
-        });
-
-        connection.on("RoomUserLeft", (_room: string, userName: string) => {
-            setMessages((prev) => [...prev, {
-                room: _room,
-                sender: "system",
-                message: `${userName} kilépett.`,
-                sentAt: new Date().toISOString()
-            }]);
-        });
-
-        return () => {
-            connection.off("ReceiveRoomMessage");
-            connection.off("RoomUserJoined");
-            connection.off("RoomUserLeft");
-        };
-    }, [connection]);
 
     const sendMessage = async (message: string) => {
         if (!connection || status !== "connected" || !roomName) return;
